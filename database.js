@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-class database {
+class Database {
     constructor() {
         this.connect();
     }
@@ -11,3 +11,5 @@ class database {
         .catch((err) => console.error('Error connecting to database', err));
     }
 }
+
+module.exports = new Database();
