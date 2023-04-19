@@ -1,13 +1,16 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const port = 8000;
 const middleware = require('./middleware');
-const path  = require('path');
-
+const path = require('path');
+const bodyParser = require('body-parser');
 const server = app.listen(port, () => console.log('listening on port 8000'));
 
 app.set('view engine', 'pug');
 app.set('views', 'views');
+
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // direct server to access css files in the public folder
 app.use(express.static(path.join(__dirname, 'public')))
