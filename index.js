@@ -1,10 +1,10 @@
-require('dotenv').config();
 const express = require('express');
 const app = express();
 const port = 8000;
 const middleware = require('./middleware');
 const path = require('path');
 const bodyParser = require('body-parser');
+const mongoose = require('./database');
 const server = app.listen(port, () => console.log('listening on port 8000'));
 
 app.set('view engine', 'pug');
