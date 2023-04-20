@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const router = express.Router();
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
 const User = require('../schemas/UserSchema');
 
 app.set('view engine', 'pug');
@@ -39,7 +40,11 @@ router.post('/', async (req, res, next) => {
         if (user == null) {
             // no user found, insert it into the database
             var data = req.body;
+
+            data.password = await bcrypt.hash(password, 10)
+
             console.log(data);
+
             User.create(data)
             .then((user) => {
                 console.log(user);
