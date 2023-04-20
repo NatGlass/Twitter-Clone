@@ -6,6 +6,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('./database');
 const server = app.listen(port, () => console.log('listening on port 8000'));
+const session = require('express-session');
 
 app.set('view engine', 'pug');
 app.set('views', 'views');
@@ -13,7 +14,13 @@ app.set('views', 'views');
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // direct server to access css files in the public folder
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: false
+}));
 
 // ROUTES
 const loginRoute = require('./routes/loginRoute');
