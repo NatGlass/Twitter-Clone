@@ -34,7 +34,7 @@ router.post('/', async (req, res, next) => {
         .catch(error => {
             console.log(error);
             payload.errorMessage = "Something went wrong";
-            return res.status(200).render('register', payload); // <-- move inside the catch block
+            return res.status(200).render('register', payload);
         });
 
         if (user == null) {
@@ -53,22 +53,22 @@ router.post('/', async (req, res, next) => {
             .catch((error) => {
                 console.log(error);
                 payload.errorMessage = "Error creating user";
-                return res.status(200).render('register', payload); // <-- move inside the catch block
+                return res.status(200).render('register', payload);
             });
         }
         else if (user === user.email) {
              // user found
             payload.errorMessage = "Email already in use"
-            return res.status(200).render('register', payload); // <-- move inside the if block
+            return res.status(200).render('register', payload);
         }
         else {
             payload.errorMessage = "Username already in use"
-            return res.status(200).render('register', payload); // <-- move inside the else block
+            return res.status(200).render('register', payload);
         }
     }
     else {
         payload.errorMessage = "All fields required";
-        return res.status(200).render('register', payload); // <-- move inside the else block
+        return res.status(200).render('register', payload);
     }
 });
 
