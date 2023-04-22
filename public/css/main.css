@@ -4,6 +4,8 @@
     --bluelight: #9BD1F9;
     --lightgrey: rgb(230,236,240);
     --spacing: 15px;
+    --greytext: rgb(101, 119, 134);
+    --greybuttontext: rgba(0,0,0,0.34);
 }
 
 nav {
@@ -110,4 +112,66 @@ h1 {
 
 #submitPostButton:disabled {
     background-color: var(--bluelight);
+}
+
+button {
+    background-color: transparent;
+    border: none;
+    color: var(--greybuttontext);
+}
+
+.post {
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing);
+    cursor: pointer;
+    border-bottom: 1px solid var(--lightgrey);
+    flex-shrink: 0;
+}
+
+.mainContentContainer {
+    flex: 1;
+    display: flex;
+}
+
+.postContentContainer {
+    padding-left: var(--spacing);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.displayName {
+    font-weight: bold;
+}
+
+.username, .date {
+    color: var(--greytext);
+}
+
+.postFooter {
+    display: flex;
+    align-items: center;
+}
+
+.postFooter .postButtonContainer {
+    flex: 1;
+}
+
+.postFooter .postButtonContainer button {
+    padding: 2px 5px;
+}
+
+.postHeader a:hover {
+    text-decoration: underline;
+}
+
+.postHeader a, .header span {
+    padding-right: 5px;
+}
+
+.postButtonContainer button:hover {
+    background-color: var(--lightblue);
+    color: var(--blue);
+    border-radius: 50%;
 }
