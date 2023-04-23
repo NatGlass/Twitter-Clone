@@ -82,6 +82,11 @@ h1 {
     flex-shrink: 0;
 }
 
+.modal .postFormContainer {
+    border: none;
+    padding: var(--spacing) 0 0 0;
+}
+
 .userImageContainer {
     width: 50px;
     height: 50px;
@@ -201,4 +206,11 @@ button i, button span {
 .postButtonContainer.green button:hover {
     color: var(--green);
     background-color: var(--greenbg);
+}
+
+.postActionContainer {
+    padding-left: 65px;
+    font-size: 14px;
+    color: var(--greytext);
+    margin-bottom: 5px;
 }

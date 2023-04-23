@@ -87,6 +87,8 @@ function createPostHtml(postData) {
     var postedBy = postData.postedBy;
 
     var isRetweet = postData.retweetData !== undefined;
+    var retweetedBy = isRetweet ? postedBy.username : null;
+    postData = isRetweet ? postData.retweetData : postData;
 
     if(postedBy._id === undefined) {
         return console.log("User object not populated");
@@ -98,7 +100,18 @@ function createPostHtml(postData) {
     var likedButtonActiveClass = postData.likes.includes(userLoggedIn._id) ? "active" : "";
     var retweetButtonActiveClass = postData.retweetUsers.includes(userLoggedIn._id) ? "active" : "";
 
+    var retweetText = '';
+    if(isRetweet) {
+        retweetText = `<span>
+        <i class='fas fa-retweet'></i>
+        Retweeted by <a href='/profile/${retweetedBy}'>@${retweetedBy}</a>
+        </span>`
+    }
+
     return `<div class='post' data-id='${postData._id}'>
+                <div class='postActionContainer'>
+                    ${retweetText}
+                </div>
                 <div class='mainContentContainer'>
                     <div class='userImageContainer'>
                         <img src='${postedBy.profilePic}'>
@@ -114,7 +127,7 @@ function createPostHtml(postData) {
                         </div>
                         <div class='postFooter'>
                             <div class='postButtonContainer'>
-                                <button>
+                                <button data-toggle='modal' data-target='#replyModal'>
                                     <i class='far fa-comment'></i>
                                 </button>
                             </div>
