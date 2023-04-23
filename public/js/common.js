@@ -1,7 +1,6 @@
 $("#postTextarea").keyup(event => {
     var textbox = $(event.target);
     var value = textbox.val().trim();
-    
     var submitButton = $("#submitPostButton");
 
     if(submitButton.length == 0) return alert("No submit button found");
@@ -23,7 +22,6 @@ $("#submitPostButton").click(() => {
     }
 
     $.post("/api/posts", data, postData => {
-        
         var html = createPostHtml(postData);
         $(".postsContainer").prepend(html);
         textbox.val("");
@@ -31,8 +29,33 @@ $("#submitPostButton").click(() => {
     })
 })
 
+$(document).on("click", ".likeButton", (event) => {
+    var button = $(event.target);
+    var postId = getPostId(button)
+    console.log(postId)
+
+    if (postId === undefined) return;
+
+    $.ajax({
+        url: `/api/posts/${postId}/like`,
+        type: "PUT",
+        success: (postData) => {
+            button.find("span").text(postData.likes.length || "")
+        }
+    })
+})
+
+function getPostId(element) {
+    var isRoot = element.hasClass("post");
+    var rootElement = isRoot == true ? element : element.closest(".post");
+    var postId = rootElement.data().id;
+
+    if (postId === undefined) return alert("No post id")
+
+    return postId;
+}
+
 function createPostHtml(postData) {
-    
     var postedBy = postData.postedBy;
 
     if(postedBy._id === undefined) {
@@ -42,7 +65,7 @@ function createPostHtml(postData) {
     var displayName = postedBy.firstName + " " + postedBy.lastName;
     var timestamp = timeDifference(new Date(), new Date(postData.createdAt));
 
-    return `<div class='post'>
+    return `<div class='post' data-id='${postData._id}'>
                 <div class='mainContentContainer'>
                     <div class='userImageContainer'>
                         <img src='${postedBy.profilePic}'>
@@ -68,8 +91,9 @@ function createPostHtml(postData) {
                                 </button>
                             </div>
                             <div class='postButtonContainer'>
-                                <button>
+                                <button class='likeButton'>
                                     <i class='far fa-heart'></i>
+                                    <span>${postData.likes.length || ""}</span>
                                 </button>
                             </div>
                         </div>
