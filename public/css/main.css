@@ -6,6 +6,7 @@
     --spacing: 15px;
     --greytext: rgb(101, 119, 134);
     --greybuttontext: rgba(0,0,0,0.34);
+    --red: rgb(226,34,94);
 }
 
 nav {
@@ -178,4 +179,8 @@ button i, button span {
     background-color: var(--lightblue);
     color: var(--blue);
     border-radius: 50%;
+}
+
+.postButtonContainer.red button.active {
+    color: var(--red);
 }
