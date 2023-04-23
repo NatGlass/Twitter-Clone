@@ -1,20 +1,22 @@
 const express = require('express');
 const app = express();
 const router = express.Router();
-const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt');
+const bodyParser = require("body-parser")
+const bcrypt = require("bcrypt");
 const User = require('../schemas/UserSchema');
 
-app.set('view engine', 'pug');
-app.set('views', 'views');
+app.set("view engine", "pug");
+app.set("views", "views");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-router.get('/', (req, res, next) => {
-    res.status(200).render('register');
-});
+router.get("/", (req, res, next) => {
 
-router.post('/', async (req, res, next) => {
+    res.status(200).render("register");
+})
+
+router.post("/", async (req, res, next) => {
+
     var firstName = req.body.firstName.trim();
     var lastName = req.body.lastName.trim();
     var username = req.body.username.trim();
@@ -23,53 +25,45 @@ router.post('/', async (req, res, next) => {
 
     var payload = req.body;
 
-    if (firstName && lastName && username && email && password) {
-        // check that the user exists
+    if(firstName && lastName && username && email && password) {
         var user = await User.findOne({
             $or: [
                 { username: username },
                 { email: email }
             ]
         })
-        .catch(error => {
+        .catch((error) => {
             console.log(error);
-            payload.errorMessage = "Something went wrong";
-            return res.status(200).render('register', payload);
+            payload.errorMessage = "Something went wrong.";
+            res.status(200).render("register", payload);
         });
 
-        if (user == null) {
-            // no user found, insert it into the database
+        if(user == null) {
+            // No user found
             var data = req.body;
-
             data.password = await bcrypt.hash(password, 10);
-
-            console.log(data);
 
             User.create(data)
             .then((user) => {
                 req.session.user = user;
-                return res.redirect('/');
+                return res.redirect("/");
             })
-            .catch((error) => {
-                console.log(error);
-                payload.errorMessage = "Error creating user";
-                return res.status(200).render('register', payload);
-            });
-        }
-        else if (user === user.email) {
-             // user found
-            payload.errorMessage = "Email already in use"
-            return res.status(200).render('register', payload);
         }
         else {
-            payload.errorMessage = "Username already in use"
-            return res.status(200).render('register', payload);
+            // User found
+            if (email == user.email) {
+                payload.errorMessage = "Email already in use.";
+            }
+            else {
+                payload.errorMessage = "Username already in use.";
+            }
+            res.status(200).render("register", payload);
         }
     }
     else {
-        payload.errorMessage = "All fields required";
-        return res.status(200).render('register', payload);
+        payload.errorMessage = "Make sure each field has a valid value.";
+        res.status(200).render("register", payload);
     }
-});
+})
 
 module.exports = router;
