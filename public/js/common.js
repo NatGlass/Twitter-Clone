@@ -51,6 +51,28 @@ $(document).on("click", ".likeButton", (event) => {
     })
 })
 
+$(document).on("click", ".retweetButton", (event) => {
+    var button = $(event.target);
+    var postId = getPostId(button)
+    console.log(postId)
+
+    if (postId === undefined) return;
+
+    $.ajax({
+        url: `/api/posts/${postId}/retweet`,
+        type: "POST",
+        success: (postData) => {
+            button.find("span").text(postData.likes.length || "");
+
+            if(postData.likes.includes(userLoggedIn._id)) {
+                button.addClass("active");
+            } else {
+                button.removeClass("active");
+            }
+        }
+    })
+})
+
 function getPostId(element) {
     var isRoot = element.hasClass("post");
     var rootElement = isRoot == true ? element : element.closest(".post");
@@ -64,6 +86,8 @@ function getPostId(element) {
 function createPostHtml(postData) {
     var postedBy = postData.postedBy;
 
+    var isRetweet = postData.retweetData !== undefined;
+
     if(postedBy._id === undefined) {
         return console.log("User object not populated");
     }
@@ -72,6 +96,7 @@ function createPostHtml(postData) {
     var timestamp = timeDifference(new Date(), new Date(postData.createdAt));
 
     var likedButtonActiveClass = postData.likes.includes(userLoggedIn._id) ? "active" : "";
+    var retweetButtonActiveClass = postData.retweetUsers.includes(userLoggedIn._id) ? "active" : "";
 
     return `<div class='post' data-id='${postData._id}'>
                 <div class='mainContentContainer'>
@@ -94,8 +119,9 @@ function createPostHtml(postData) {
                                 </button>
                             </div>
                             <div class='postButtonContainer green'>
-                                <button class='retweet'>
+                                <button class='retweetButton ${retweetButtonActiveClass}'>
                                     <i class='fas fa-retweet'></i>
+                                    <span>${postData.retweetUsers.length || ""}</span>
                                 </button>
                             </div>
                             <div class='postButtonContainer red'>
