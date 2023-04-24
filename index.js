@@ -7,7 +7,7 @@ const bodyParser = require("body-parser")
 const mongoose = require("./database");
 const session = require("express-session");
 
-const server = app.listen(port, () => console.log("Server listening on port 8000"));
+const server = app.listen(port, () => console.log("Server listening on port " + port));
 
 app.set("view engine", "pug");
 app.set("views", "views");
@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(session({
-    secret: "bbq chips",
+    secret: "jisjfipwjr903ir",
     resave: true,
     saveUninitialized: false
 }))
@@ -24,14 +24,15 @@ app.use(session({
 // Routes
 const loginRoute = require('./routes/loginRoute');
 const registerRoute = require('./routes/registerRoute');
+const postRoute = require('./routes/postRoute');
 
 // Api routes
 const postsApiRoute = require('./routes/api/posts');
 
 app.use("/login", loginRoute);
 app.use("/register", registerRoute);
-
 app.use("/api/posts", postsApiRoute);
+app.use("/posts", middleware.requireLogin, postRoute);
 
 app.get("/", middleware.requireLogin, (req, res, next) => {
 
