@@ -172,6 +172,12 @@ function createPostHtml(postData, largeFont = false) {
 
     }
 
+    var button = "";
+
+    if (postData._id == userLoggedIn._id) {
+        buttons = `<button data-id="${postData._id}" data-toggle="modal" data-target="#deletePostModal"></button>`
+    }
+
     return `<div class='post ${largeFontClass}' data-id='${postData._id}'>
                 <div class='postActionContainer'>
                     ${retweetText}
